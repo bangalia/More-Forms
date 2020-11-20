@@ -48,7 +48,7 @@ def compliments():
     """Shows the user a form to get compliments."""
     context = { 
         'user_name':request.args.get('name')
-        'compliments':list_of_compliments
+        compliments : list_of_compliments
     }
     return render_template('compliments_form.html', **context)
 
@@ -159,6 +159,7 @@ def image_filter():
     else: # if it's a GET request
         context = {
             # TODO: Add context variable here for the full list of filter types
+
         }
         return render_template('image_filter.html', **context)
 
@@ -185,6 +186,9 @@ def gif_search():
                 # - 'q': the search query
                 # - 'key': the API key (defined above)
                 # - 'limit': the number of GIFs requested
+                'q':request.args.get('search_results')
+                'key': API_KEY
+                'limit':request.args.get('quantity')
             })
 
         gifs = json.loads(response.content).get('results')
