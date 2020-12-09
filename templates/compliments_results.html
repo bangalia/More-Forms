@@ -7,28 +7,13 @@ Compliments Results
 {% block content %}
 
 <!-- Your HTML code goes here! -->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title></title>
-</head>
-<body>
-    <form action="/compliments_results">
-        <label id="results">
-            {%if no in wants_compliments %}
-            Ok, see you later!
-            {%if yes in wants_compliments %}
-            Hello there {{ user_name}}, you are very
-            <ul>
-            {% for compliment in compliments %}
-            <li> {{ compliment }} </li>
+<p>Hello there {{ user_name}}, you are very</p>
+
+<ul>
+    {% if wants_compliments =="yes" %}
+        {% for num in list_of_compliments %}
+             <li> {{ num }} </li>
             {% endfor %}
-             </ul>
-        </label>
-    </form>
-</body>
-</html>
-
-
+        {% endif %}
+</ul>
 {% endblock %}
