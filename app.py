@@ -46,7 +46,7 @@ list_of_compliments = [
 @app.route('/compliments')
 def compliments():
     """Shows the user a form to get compliments."""
-    return render_template('compliments_form.html', **context)
+    return render_template('compliments_form.html')
 
 @app.route('/compliments_results')
 def compliments_results():
@@ -138,15 +138,16 @@ def image_filter():
         
         # TODO: Get the user's chosen filter type (whichever one they chose in the form) and save
         # as a variable
-        filter_type = request.args.get('filter_type')
+        filter_type = request.form.get('filter_type')
         
         # Get the image file submitted by the user
         image = request.files.get('users_image')
 
         # TODO: call `save_image()` on the image & the user's chosen filter type, save the returned
         # value as the new file path
-
+        newPath = save_image(image, filter_type)
         # TODO: Call `apply_filter()` on the file path & filter type
+        apply_filter(newPath, filter_type)
 
         image_url = f'/static/images/{image.filename}'
 
@@ -154,6 +155,8 @@ def image_filter():
             # TODO: Add context variables here for:
             # - The full list of filter types
             # - The image URL
+            "filter_types": filter_types,
+            "image_url": image_url,
         }
 
         return render_template('image_filter.html', **context)
@@ -161,7 +164,7 @@ def image_filter():
     else: # if it's a GET request
         context = {
             # TODO: Add context variable here for the full list of filter types
-
+            "filter_types": filter_types_dict.keys()
         }
         return render_template('image_filter.html', **context)
 
@@ -180,6 +183,9 @@ def gif_search():
     if request.method == 'POST':
         # TODO: Get the search query & number of GIFs requested by the user, store each as a 
         # variable
+        search_query = request.form.get("search_query"),
+        limit = request.form.get("quantity")
+
 
         response = requests.get(
             TENOR_URL,
@@ -188,9 +194,9 @@ def gif_search():
                 # - 'q': the search query
                 # - 'key': the API key (defined above)
                 # - 'limit': the number of GIFs requested
-                'q':request.args.get('search_results'),
+                'q': search_query,
                 'key': API_KEY,
-                'limit':request.args.get('quantity')
+                'limit':limit
             })
 
         gifs = json.loads(response.content).get('results')
